@@ -6,10 +6,12 @@ final class RandomPhotosRequestService {
         var result: [UnsplashPhoto] = []
         (0..<30).forEach { _ in
             var mock = UnsplashPhoto.mock
-            mock = UnsplashPhoto(id: UUID().uuidString,
-                                 description: mock.description,
-                                 urls: mock.urls,
-                                 user: mock.user)
+            mock = UnsplashPhoto(
+                id: UUID().uuidString,
+                description: mock.description,
+                urls: mock.urls,
+                user: mock.user
+            )
             result.append(mock)
         }
         return result

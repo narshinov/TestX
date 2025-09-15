@@ -15,6 +15,9 @@ struct DetailsView: View {
                 .padding([.top, .trailing])
         }
         .frame(maxHeight: .infinity, alignment: .top)
+        .task {
+            await viewModel.onAppear()
+        }
     }
     
     private var closeButton: some View {
@@ -49,9 +52,9 @@ struct DetailsView: View {
                 Text("@\(viewModel.photo.user.username)")
                     .fontWeight(.bold)
             }
-            
-            Button(action: viewModel.addToFavorite) {
-                Image(systemName: "heart")
+            Spacer()
+            Button(action: viewModel.toggleFavorite) {
+                Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                     .resizable()
                     .scaledToFit()
                     .foregroundStyle(.red)

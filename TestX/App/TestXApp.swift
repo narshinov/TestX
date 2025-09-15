@@ -4,7 +4,6 @@ import SwiftData
 @main
 struct TestXApp: App {
     
-//    private let dataManager: DataManager
     private let sharedModelContainer: ModelContainer
     
     init() {
@@ -20,12 +19,12 @@ struct TestXApp: App {
         }()
         
         self.sharedModelContainer = sharedModelContainer
-//        self.dataManager = DataManager(modelContainer: sharedModelContainer)
     }
     
     var body: some Scene {
         WindowGroup {
             CoreView(modelContainer: sharedModelContainer)
+                .modelContainer(sharedModelContainer)
         }
     }
 }

@@ -18,11 +18,15 @@ final class PhotosViewModel {
     private let randomPhotosRequestService = RandomPhotosRequestService()
     private let searchPhotoRequestService = SearchPhotoRequestService()
     
-    func searchOrLoadRandomPhotos() async {
+    func fetchRandomPhotos() async {
+        await searchOrLoadRandomPhotos()
+    }
+    
+    private func searchOrLoadRandomPhotos() async {
         do {
             if searchText.isEmpty {
                 guard !isLoaded else { return }
-                photos = try await randomPhotosRequestService.fetchRandomPhotosMock()
+                photos = try await randomPhotosRequestService.fetchRandomPhotos()
                 isLoaded = true
             } else {
                 photos = try await searchPhotoRequestService.searchPhotos(query: searchText)
@@ -31,9 +35,5 @@ final class PhotosViewModel {
             print("Error loading photos:", error)
             photos = []
         }
-    }
-    
-    func fetchRandomPhotos() async {
-        await searchOrLoadRandomPhotos()
     }
 }

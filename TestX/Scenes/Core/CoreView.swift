@@ -6,18 +6,12 @@ struct CoreView: View {
     
     var body: some View {
         TabView {
-            PhotosView(
-                modelContainer: modelContainer
-            )
+            PhotosView(modelContainer: modelContainer)
             .tabItem {
                 Label("Photos", systemImage: "photo.stack")
             }
             
-            FavoritesView(
-                viewModel: FavoritesViewModel(
-                    modelContainer: modelContainer
-                )
-            )
+            FavoritesView(modelContainer: modelContainer)
             .tabItem {
                 Label("Favorites", systemImage: "heart")
             }

@@ -10,6 +10,17 @@ final actor DataManager: ModelActor {
         saveContext()
     }
     
+    func isPhotoSaved(_ id: String) -> Bool {
+        let predicate = #Predicate<PhotoEntry> { $0.id == id }
+        let descriptor = FetchDescriptor<PhotoEntry>(predicate: predicate)
+        do {
+            return try modelContext.fetch(descriptor).isEmpty == false
+        } catch {
+            print("Failed to check photo existence: \(error)")
+            return false
+        }
+    }
+    
     func removePhoto(_ id: String) {
         let predicate = #Predicate<PhotoEntry> { $0.id == id }
         let descriptor = FetchDescriptor<PhotoEntry>(predicate: predicate)

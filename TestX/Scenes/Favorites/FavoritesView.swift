@@ -1,30 +1,40 @@
 import SwiftUI
+import SwiftData
 
 struct FavoritesView: View {
-    @State var viewModel: FavoritesViewModel
+    
+    let modelContainer: ModelContainer
+    
+    @Query private var photoEntries: [PhotoEntry]
+    @State private var selectedPhoto: UnsplashPhoto?
     
     var body: some View {
-        List(viewModel.photos) { photo in
-            HStack {
-                if let url = URL(string: photo.urls.thumb) {
-                    ResizableAsyncImage(url: url)
-                        .frame(width: 60, height: 60)
-                        .cornerRadius(8)
-                }
-                VStack(alignment: .leading) {
-                    Text(photo.user.name)
-                        .fontWeight(.semibold)
-                    if let description = photo.description {
-                        Text(description)
-                            .lineLimit(2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
+        List(photoEntries) { entry in
+            listCell(UnsplashPhoto(from: entry))
         }
-        .task {
-            await viewModel.loadFavorites()
+        .sheet(item: $selectedPhoto) { photo in
+            DetailsView(
+                viewModel: .init(modelContainer: modelContainer, photo: photo)
+            )
         }
-        .navigationTitle("Favorites")
+    }
+    
+    private func listCell(_ photo: UnsplashPhoto) -> some View  {
+        Button {
+             selectedPhoto = photo
+         } label: {
+             HStack {
+                 if let url = URL(string: photo.urls.thumb) {
+                     ResizableAsyncImage(url: url)
+                         .frame(width: 60, height: 60)
+                         .cornerRadius(8)
+                 }
+                 Text(photo.user.name)
+                     .fontWeight(.semibold)
+                 Spacer()
+             }
+             .contentShape(Rectangle())
+         }
+         .buttonStyle(.plain)
     }
 }

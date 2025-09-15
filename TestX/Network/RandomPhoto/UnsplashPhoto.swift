@@ -55,5 +55,4 @@ extension UnsplashPhoto {
             name: entry.name
         )
     }
-    
 }
