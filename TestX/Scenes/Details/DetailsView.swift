@@ -3,7 +3,7 @@ import SwiftData
 
 struct DetailsView: View {
     @Environment(\.dismiss) var dismiss
-    var viewModel: DetailsViewModel
+    @State var viewModel: DetailsViewModel
 
     var body: some View {
         VStack(alignment: .leading) {

@@ -4,6 +4,7 @@ import Foundation
 final class PhotosViewModel {
     
     var photos: [UnsplashPhoto] = []
+    var errorMessage: String?
     
     var searchText: String = "" {
         didSet {
@@ -12,7 +13,7 @@ final class PhotosViewModel {
             }
         }
     }
-    
+        
     private var isLoaded = false
     
     private let randomPhotosRequestService = RandomPhotosRequestService()
@@ -20,6 +21,13 @@ final class PhotosViewModel {
     
     func fetchRandomPhotos() async {
         await searchOrLoadRandomPhotos()
+    }
+    
+    func retryRequest() {
+        Task {
+            errorMessage = nil
+            await searchOrLoadRandomPhotos()
+        }
     }
     
     private func searchOrLoadRandomPhotos() async {
@@ -31,9 +39,14 @@ final class PhotosViewModel {
             } else {
                 photos = try await searchPhotoRequestService.searchPhotos(query: searchText)
             }
+            
+            errorMessage = nil
         } catch {
-            print("Error loading photos:", error)
             photos = []
+            await MainActor.run {
+                let networkError = error as? NetworkError
+                errorMessage = networkError?.message ?? "Something went wrong"
+            }
         }
     }
 }

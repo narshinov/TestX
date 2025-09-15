@@ -12,6 +12,7 @@ struct PhotosView: View {
     private let columns = 3
     
     @State private var selectedPhoto: UnsplashPhoto?
+    @State private var showingError = false
     
     var body: some View {
         NavigationStack {
@@ -24,10 +25,19 @@ struct PhotosView: View {
                 .task {
                     await viewModel.fetchRandomPhotos()
                 }
+                .onChange(of: viewModel.errorMessage) { _, newValue in
+                    showingError = newValue != nil
+                }
                 .sheet(item: $selectedPhoto) { photo in
                     DetailsView(
                         viewModel: .init(modelContainer: modelContainer, photo: photo)
                     )
+                }
+                .alert("Error", isPresented: $showingError, presenting: viewModel.errorMessage) { _ in
+                    Button("Retry", action: viewModel.retryRequest)
+                    Button("OK", role: .cancel) {}
+                } message: { message in
+                    Text(message)
                 }
         }
     }
