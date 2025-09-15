@@ -9,7 +9,7 @@ final class PhotoEntry {
     var regularUrl: String
     var smallUrl: String
     var thumbUrl: String
-    @Attribute(.unique) var userID: String
+    var userID: String
     var username: String
     var name: String
     

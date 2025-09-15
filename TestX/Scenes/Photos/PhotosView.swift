@@ -65,6 +65,7 @@ struct PhotosView: View {
                                 .frame(width: itemWidth, height: itemWidth)
                                 .cornerRadius(16)
                                 .id(url)
+                                .contentShape(Rectangle())
                                 .onTapGesture {
                                     selectedPhoto = nil
                                     DispatchQueue.main.async {

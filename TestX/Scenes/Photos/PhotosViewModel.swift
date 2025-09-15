@@ -8,11 +8,16 @@ final class PhotosViewModel {
     
     var searchText: String = "" {
         didSet {
-            Task {
+            searchTask?.cancel()
+            searchTask = Task {
+                try? await Task.sleep(nanoseconds: 300_000_000)
+                guard !Task.isCancelled else { return }
                 await searchOrLoadRandomPhotos()
             }
         }
     }
+    
+    private var searchTask: Task<Void, Never>?
         
     private var isLoaded = false
     
@@ -31,17 +36,27 @@ final class PhotosViewModel {
     }
     
     private func searchOrLoadRandomPhotos() async {
+        let currentQuery = searchText
+
         do {
+            let result: [UnsplashPhoto]
+
             if searchText.isEmpty {
                 guard !isLoaded else { return }
-                photos = try await randomPhotosRequestService.fetchRandomPhotos()
+                result = try await randomPhotosRequestService.fetchRandomPhotos()
                 isLoaded = true
             } else {
-                photos = try await searchPhotoRequestService.searchPhotos(query: searchText)
+                result = try await searchPhotoRequestService.searchPhotos(query: searchText)
             }
             
             errorMessage = nil
+
+            guard currentQuery == searchText else { return }
+            photos = result
         } catch {
+            if let urlError = error as? URLError, urlError.code == .cancelled {
+                return
+            }
             photos = []
             await MainActor.run {
                 let networkError = error as? NetworkError
