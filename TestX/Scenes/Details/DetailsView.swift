@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Kingfisher
 
 struct DetailsView: View {
     @Environment(\.dismiss) var dismiss
@@ -7,7 +8,12 @@ struct DetailsView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            imageView
+            KFImage(URL(string: viewModel.photo.urls.regular))
+                .placeholder { ImagePlaceholder() }
+                .onFailureView { ImageFailureView() }
+                .resizable()
+                .scaledToFit()
+            
             infoView
         }
         .overlay(alignment: .topTrailing) {
@@ -29,16 +35,6 @@ struct DetailsView: View {
                 .scaledToFit()
                 .foregroundStyle(.white)
                 .frame(width: 32, height: 32)
-        }
-    }
-    
-    @ViewBuilder
-    private var imageView: some View {
-        if let url = URL(string: viewModel.photo.urls.regular) {
-            ResizableAsyncImage(
-                url: url,
-                contentMode: .fit
-            )
         }
     }
     

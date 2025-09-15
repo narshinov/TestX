@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Kingfisher
 
 struct FavoritesView: View {
     
@@ -25,7 +26,11 @@ struct FavoritesView: View {
          } label: {
              HStack {
                  if let url = URL(string: photo.urls.thumb) {
-                     ResizableAsyncImage(url: url)
+                     KFImage(url)
+                         .placeholder { ImagePlaceholder() }
+                         .onFailureView { ImageFailureView() }
+                         .resizable()
+                         .scaledToFill()
                          .frame(width: 60, height: 60)
                          .cornerRadius(8)
                  }

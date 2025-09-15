@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Kingfisher
 
 struct PhotosView: View {
     
@@ -54,16 +55,22 @@ struct PhotosView: View {
                     ),
                     spacing: spacing
                 ) {
-                    ForEach(viewModel.photos) { photo in
+                    ForEach(viewModel.photos, id: \.id) { photo in
                         if let url = URL(string: photo.urls.small) {
-                            ResizableAsyncImage(
-                                url: url
-                            )
-                            .frame(width: itemWidth, height: itemWidth)
-                            .cornerRadius(16)
-                            .onTapGesture {
-                                selectedPhoto = photo
-                            }
+                            KFImage(url)
+                                .placeholder { ImagePlaceholder() }
+                                .onFailureView { ImageFailureView() }
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: itemWidth, height: itemWidth)
+                                .cornerRadius(16)
+                                .id(url)
+                                .onTapGesture {
+                                    selectedPhoto = nil
+                                    DispatchQueue.main.async {
+                                        selectedPhoto = photo
+                                    }
+                                }
                         }
                     }
                 }

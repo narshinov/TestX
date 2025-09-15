@@ -19,6 +19,7 @@ final class RandomPhotosRequestService {
     
     func fetchRandomPhotos() async throws -> [UnsplashPhoto] {
         do {
+//            throw NetworkError.badRequest
             let urlRequest = try buildRequest()
             let result = try await requestRandomPhotos(with: urlRequest)
             return result
