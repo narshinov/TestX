@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct DetailsView: View {
     @Environment(\.dismiss) var dismiss
@@ -59,8 +60,4 @@ struct DetailsView: View {
         }
         .padding(.horizontal)
     }
-}
-
-#Preview {
-    DetailsView(viewModel: .init(photo: .mock))
 }

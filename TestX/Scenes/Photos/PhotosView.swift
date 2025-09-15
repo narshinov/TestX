@@ -1,7 +1,9 @@
 import SwiftUI
+import SwiftData
 
 struct PhotosView: View {
     @State var viewModel: PhotosViewModel = PhotosViewModel()
+    var modelContainer: ModelContainer
     
     private let spacing: CGFloat = 10
     private let horizontalPadding: CGFloat = 22
@@ -21,7 +23,12 @@ struct PhotosView: View {
                     await viewModel.fetchRandomPhotos()
                 }
                 .sheet(item: $selectedPhoto) { photo in
-                    DetailsView(viewModel: .init(photo: photo))
+                    DetailsView(
+                        viewModel: .init(
+                            modelContainer: modelContainer,
+                            photo: photo
+                        )
+                    )
                 }
         }
     }
@@ -61,8 +68,4 @@ struct PhotosView: View {
         let availableWidth = totalWidth - horizontalPadding * 2 - totalSpacing
         return availableWidth / CGFloat(columns)
     }
-}
-
-#Preview {
-    PhotosView()
 }
